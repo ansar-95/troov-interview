@@ -39,8 +39,39 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth',
+    
   ],
-
+  routes : {
+    '/' : {prerender : true},
+    '/*' : {cors : true}
+  },
+  router: {
+    middleware: ['auth']
+  },
+  axios: {
+    baseURL: 'http://localhost:3001'
+  },
+auth: {
+  localStorage: false,
+  cookie: {
+    prefix: 'auth.',
+    options: {
+      path: '/',
+      maxAge: 10800
+    }
+  },
+  strategies: {
+    local: {
+      endpoints: {
+        login: { url: 'api/auth/login', method: 'post', propertyName: 'token'},
+        user: { url: 'api/auth/user', method: 'get', propertyName: 'content' },
+        logout: false
+      }
+    }
+  }
+},
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 }
